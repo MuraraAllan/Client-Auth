@@ -7,6 +7,7 @@ export const USER_UNAUTHENTICATED = 'USER_UNAUTHENTICATED';
 export const AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR';
 export const GET_USERS = 'GET_USERS';
 export const CHECK_IF_AUTHENTICATED = 'CHECK_IF_AUTHENTICATED';
+axios.defaults.withCredentials = true
 
 export const authError = (error) => {
   return {
@@ -34,7 +35,7 @@ export const register = (username, password, confirmPassword, history) => {
   };
 };
 
-export const login = (username, password, history) => {
+export const signIn = (username, password, history) => {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/login`, { username, password })
       .then(() => {
@@ -49,7 +50,7 @@ export const login = (username, password, history) => {
   };
 };
 
-export const logout = () => {
+export const signOutUser = () => {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/logout`)
       .then(() => {
@@ -66,7 +67,7 @@ export const logout = () => {
 export const getUsers = () => {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/restricted/users`)
-      .then(()=> {
+      .then((response)=> {
         dispatch({
           type: GET_USERS,
           payload: response.data
