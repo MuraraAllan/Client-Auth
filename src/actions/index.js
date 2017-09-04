@@ -1,5 +1,5 @@
 import axios from 'axios';
-const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'http://localhost:8000';
 
 export const USER_REGISTERED = 'USER_REGISTERED';
 export const USER_AUTHENTICATED = 'USER_AUTHENTICATED';
