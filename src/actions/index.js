@@ -7,12 +7,12 @@ export const USER_UNAUTHENTICATED = 'USER_UNAUTHENTICATED';
 export const AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR';
 export const GET_USERS = 'GET_USERS';
 export const CHECK_IF_AUTHENTICATED = 'CHECK_IF_AUTHENTICATED';
-axios.defaults.withCredentials = true
+//axios.defaults.withCredentials = true
 
 export const authError = (error) => {
   return {
     type: AUTHENTICATION_ERROR,
-    payload: error,
+    payload: error.response.data.error,
   };
 };
 
@@ -23,44 +23,44 @@ export const register = (username, password, confirmPassword, history) => {
       return;
     }
     axios.post(`${ROOT_URL}/users`, { username, password })
-      .then(() => {
+      .then((ret) => {
         dispatch({
           type: USER_REGISTERED,
         });
         history.push('/signin');
       })
-      .catch(() => {
+      .catch((ret) => {
         dispatch(authError('Failed to register user'));
       });
   };
 };
 
+
 export const signIn = (username, password, history) => {
+  console.log(username, password)
   return (dispatch) => {
     axios.post(`${ROOT_URL}/login`, { username, password })
-      .then(() => {
+      .then((ret) => {
+        console.log(ret)
+        localStorage.setItem('token', ret.data.token)
         dispatch({
           type: USER_AUTHENTICATED,
         });
-        history.push('/users');
+     
+        //history.push('/users');
       })
-      .catch(() => {
-        dispatch(authError('Incorrect email/password combo'));
+      .catch((ret) => {
+        dispatch(authError(ret));
       });
   };
 };
 
 export const signOutUser = () => {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/logout`)
-      .then(() => {
-        dispatch({
-          type: USER_UNAUTHENTICATED,
-        });
-      })
-      .catch(() => {
-        dispatch(authError('Failed to log you out'));
-      });
+    localStorage.setItem('token', '');
+    dispatch({
+      type: USER_UNAUTHENTICATED,
+    });
   };
 };
 

@@ -8,21 +8,28 @@ import './css/signin.css'
 const FormItem = Form.Item;
 
 class SignIn extends Component {
+  renderAlert = () => {
+    if (!this.props.error) return null;
+    return (
+      <div>{this.props.error}</div>
+    );
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.props.signIn(values.username, values.password, this.props.history);
       }
-    });
-    //this.props.signIn(email, password, this.props.history);
+    }); 
+    //
   }
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
         <FormItem>
-          {getFieldDecorator('userName', {
+          {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Please input your username!' }],
           })(
             <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
@@ -46,6 +53,7 @@ class SignIn extends Component {
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>
+          {this.renderAlert()}
           Or <a href="">register now!</a>
         </FormItem>
       </Form>
